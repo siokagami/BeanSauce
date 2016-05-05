@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.siokagami.beansauce.R;
 import com.siokagami.beansauce.base.BaseActivity;
@@ -160,13 +161,19 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH){
                     keyword = searchEdittextKeyword.getText().toString();
-                    searchBookFragment.setKeyWords(keyword);
-                    searchMusicFragment.setKeyWords(keyword);
-                    searchMovieFragment.setKeyWords(keyword);
-                    searchBookFragment.reLoad();
-                    searchMusicFragment.reLoad();
-                    searchMovieFragment.reLoad();
-                    return true;
+                    if(keyword.equals(""))
+                    {
+                        Toast.makeText(SearchActivity.this,"什么都不输，可不行呢",Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        searchBookFragment.setKeyWords(keyword);
+                        searchMusicFragment.setKeyWords(keyword);
+                        searchMovieFragment.setKeyWords(keyword);
+                        searchBookFragment.reLoad();
+                        searchMusicFragment.reLoad();
+                        searchMovieFragment.reLoad();
+                        return true;
+                    }
                 }
                 return false;
             }

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -16,6 +17,7 @@ import com.siokagami.beansauce.model.Book;
 import com.siokagami.beansauce.model.Music;
 import com.siokagami.beansauce.model.Musics;
 import com.siokagami.beansauce.search.adapter.SearchMusicListAdapter;
+import com.siokagami.beansauce.utils.DeviceUtil;
 import com.siokagami.beansauce.view.GeneralListView;
 
 import org.json.JSONObject;
@@ -62,33 +64,43 @@ public class SearchMusicFragment extends Fragment {
     {
         listpath.clear();
         keyWords = getKeyWords();
-        listViewSearchMusic.reloadData();
+        if(listViewSearchMusic!=null) {
+            listViewSearchMusic.reloadData();
+        }
     }
     public void loadListData(final int page)
     {
         int start = (page-1)*20;
-        SearchApi.getSearchMusicList(getContext(), keyWords,start, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                musicList = new Gson().fromJson(response.toString(), Music.class);
-                if (page == 1) {
-                    listpath.clear();
+        if(!DeviceUtil.isNetConnected(getContext()))
+        {
+            Toast.makeText(getContext(), "没有联网呢···", Toast.LENGTH_SHORT).show();
+            listViewSearchMusic.setLoadState(GeneralListView.STATE_FAIL);
+        }
+        else {
+            SearchApi.getSearchMusicList(getContext(), keyWords, start, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    musicList = new Gson().fromJson(response.toString(), Music.class);
+                    if (page == 1) {
+                        listpath.clear();
+                    }
+                    if (musicList.getTotal() == 0) {
+                        listViewSearchMusic.setLoadState(GeneralListView.STATE_EMPTY);
+                        return;
+                    }
+                    listpath.addAll(musicList.getMusics());
+                    searchMusicListAdapter.notifyDataSetChanged();
+                    listViewSearchMusic.setLoadState(GeneralListView.STATE_SUCCESS);
                 }
-                if (musicList.getTotal() == 0) {
-                    listViewSearchMusic.setLoadState(GeneralListView.STATE_EMPTY);
-                    return;
-                }
-                listpath.addAll(musicList.getMusics());
-                searchMusicListAdapter.notifyDataSetChanged();
-                listViewSearchMusic.setLoadState(GeneralListView.STATE_SUCCESS);
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    listViewSearchMusic.setLoadState(GeneralListView.STATE_FAIL);
+                }
+            });
+        }
 
     }
     

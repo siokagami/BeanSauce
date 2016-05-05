@@ -16,6 +16,8 @@
             android:layout_height="40dp"
             android:src="@drawable/icon_w_logo"/>
         <EditText
+            android:hint="请输入想搜索的东西~什么都可以~"
+            android:textColorHint="#999999"
             android:id="@+id/search_edittext_keyword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

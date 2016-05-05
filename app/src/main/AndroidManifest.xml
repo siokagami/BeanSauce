@@ -3,6 +3,7 @@
     package="com.siokagami.beansauce">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".base.AppContext"
@@ -21,7 +22,7 @@
         <activity android:name=".search.activity.SearchActivity" />
         <activity android:name=".search.activity.BookProfileActivity" />
         <activity android:name=".search.activity.MusicProfileActivity" />
-        <activity android:name=".search.activity.MovieProfileActivity"></activity>
+        <activity android:name=".search.activity.MovieProfileActivity"/>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -15,6 +16,7 @@ import com.siokagami.beansauce.api.SearchApi;
 import com.siokagami.beansauce.model.Movie;
 import com.siokagami.beansauce.model.Subjects;
 import com.siokagami.beansauce.search.adapter.SearchMovieListAdapter;
+import com.siokagami.beansauce.utils.DeviceUtil;
 import com.siokagami.beansauce.view.GeneralListView;
 
 import org.json.JSONObject;
@@ -60,33 +62,43 @@ public class SearchMovieFragment extends Fragment {
     {
         listpath.clear();
         keyWords = getKeyWords();
-        listViewSearchMovie.reloadData();
+        if(listViewSearchMovie!=null) {
+            listViewSearchMovie.reloadData();
+        }
     }
     public void loadListData(final int page)
     {
         int start = (page-1)*20;
-        SearchApi.getSearchMovieList(getContext(), keyWords, start, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                movieList = new Gson().fromJson(response.toString(), Movie.class);
-                if (page == 1) {
-                    listpath.clear();
+        if(!DeviceUtil.isNetConnected(getContext()))
+        {
+            Toast.makeText(getContext(), "没有联网呢···", Toast.LENGTH_SHORT).show();
+            listViewSearchMovie.setLoadState(GeneralListView.STATE_FAIL);
+        }
+        else {
+            SearchApi.getSearchMovieList(getContext(), keyWords, start, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    movieList = new Gson().fromJson(response.toString(), Movie.class);
+                    if (page == 1) {
+                        listpath.clear();
+                    }
+                    if (movieList.getTotal() == 0) {
+                        listViewSearchMovie.setLoadState(GeneralListView.STATE_EMPTY);
+                        return;
+                    }
+                    listpath.addAll(movieList.getSubjectses());
+                    searchMovieListAdapter.notifyDataSetChanged();
+                    listViewSearchMovie.setLoadState(GeneralListView.STATE_SUCCESS);
                 }
-                if (movieList.getTotal() == 0) {
-                    listViewSearchMovie.setLoadState(GeneralListView.STATE_EMPTY);
-                    return;
-                }
-                listpath.addAll(movieList.getSubjectses());
-                searchMovieListAdapter.notifyDataSetChanged();
-                listViewSearchMovie.setLoadState(GeneralListView.STATE_SUCCESS);
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    listViewSearchMovie.setLoadState(GeneralListView.STATE_FAIL);
+                }
+            });
+        }
 
     }
     private void initView(View view)

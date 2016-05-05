@@ -49,8 +49,8 @@ public class SearchMusicListAdapter extends RecyclerView.Adapter<SearchMusicList
                 UIUtil.showMusicProfileActivity(context,listpath.get(position).getId());
             }
         });
-        holder.itemMusicTitle.setText(listpath.get(position).getTitle());
-        holder.itemMusicAuthor.setText(listpath.get(position).getAuthor().get(0).getName());
+        holder.itemMusicTitle.setText("歌曲名："+listpath.get(position).getTitle());
+        holder.itemMusicAuthor.setText("歌手："+listpath.get(position).getAuthor().get(0).getName());
         Glide.with(context).load(listpath.get(position).getImage())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.drawable.ic_data_empty)

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -15,6 +16,7 @@ import com.siokagami.beansauce.api.SearchApi;
 import com.siokagami.beansauce.model.Book;
 import com.siokagami.beansauce.model.Books;
 import com.siokagami.beansauce.search.adapter.SearchBookListAdapter;
+import com.siokagami.beansauce.utils.DeviceUtil;
 import com.siokagami.beansauce.utils.LogUtil;
 import com.siokagami.beansauce.view.GeneralListView;
 
@@ -52,7 +54,7 @@ public class SearchBookFragment extends Fragment {
     public static SearchBookFragment newInstance(String arg){
         SearchBookFragment fragment = new SearchBookFragment();
         Bundle bundle = new Bundle();
-        bundle.putString( KEYWORDS, arg);
+        bundle.putString(KEYWORDS, arg);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -60,34 +62,43 @@ public class SearchBookFragment extends Fragment {
     {
         listpath.clear();
         keyWords = getKeyWords();
-        listViewSearchBook.reloadData();
+        if(listViewSearchBook!=null) {
+            listViewSearchBook.reloadData();
+        }
     }
     public void loadListData(final int page)
     {
         int start = (page-1)*20;
-
-        SearchApi.getSearchBookList(getContext(), keyWords,start, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                bookList = new Gson().fromJson(response.toString(), Book.class);
-                if (page==1) {
-                    listpath.clear();
+        if(!DeviceUtil.isNetConnected(getContext()))
+        {
+            Toast.makeText(getContext(),"没有联网呢···",Toast.LENGTH_SHORT).show();
+            listViewSearchBook.setLoadState(GeneralListView.STATE_FAIL);
+        }
+        else {
+            SearchApi.getSearchBookList(getContext(), keyWords, start, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    bookList = new Gson().fromJson(response.toString(), Book.class);
+                    if (page == 1) {
+                        listpath.clear();
+                    }
+                    if (bookList.getTotal() == 0) {
+                        listViewSearchBook.setLoadState(GeneralListView.STATE_EMPTY);
+                        return;
+                    }
+                    listpath.addAll(bookList.getBooks());
+                    searchBookListAdapter.notifyDataSetChanged();
+                    listViewSearchBook.setLoadState(GeneralListView.STATE_SUCCESS);
                 }
-                if (bookList.getTotal() == 0) {
-                    listViewSearchBook.setLoadState(GeneralListView.STATE_EMPTY);
-                    return;
-                }
-                listpath.addAll(bookList.getBooks());
-                searchBookListAdapter.notifyDataSetChanged();
-                listViewSearchBook.setLoadState(GeneralListView.STATE_SUCCESS);
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    listViewSearchBook.setLoadState(GeneralListView.STATE_FAIL);
+                }
+            });
+        }
 
     }
 
