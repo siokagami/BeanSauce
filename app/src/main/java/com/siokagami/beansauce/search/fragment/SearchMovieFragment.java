@@ -11,13 +11,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.siokagami.android.goodrecyclerview.GoodRecyclerView;
 import com.siokagami.beansauce.R;
 import com.siokagami.beansauce.api.SearchApi;
 import com.siokagami.beansauce.model.Movie;
 import com.siokagami.beansauce.model.Subjects;
 import com.siokagami.beansauce.search.adapter.SearchMovieListAdapter;
 import com.siokagami.beansauce.utils.DeviceUtil;
-import com.siokagami.beansauce.view.GeneralListView;
 
 import org.json.JSONObject;
 
@@ -34,7 +34,7 @@ public class SearchMovieFragment extends Fragment {
     private String keyWords ="宫崎骏";
     private Movie movieList;
     List<Subjects> listpath = new ArrayList<Subjects>();
-    private GeneralListView listViewSearchMovie;
+    private GoodRecyclerView listViewSearchMovie;
     private SearchMovieListAdapter searchMovieListAdapter;
 
 
@@ -72,7 +72,7 @@ public class SearchMovieFragment extends Fragment {
         if(!DeviceUtil.isNetConnected(getContext()))
         {
             Toast.makeText(getContext(), "没有联网呢···", Toast.LENGTH_SHORT).show();
-            listViewSearchMovie.setLoadState(GeneralListView.STATE_FAIL);
+            listViewSearchMovie.setLoadState(GoodRecyclerView.STATE_FAIL);
         }
         else {
             SearchApi.getSearchMovieList(getContext(), keyWords, start, new JsonHttpResponseHandler() {
@@ -84,18 +84,18 @@ public class SearchMovieFragment extends Fragment {
                         listpath.clear();
                     }
                     if (movieList.getTotal() == 0) {
-                        listViewSearchMovie.setLoadState(GeneralListView.STATE_EMPTY);
+                        listViewSearchMovie.setLoadState(GoodRecyclerView.STATE_EMPTY);
                         return;
                     }
                     listpath.addAll(movieList.getSubjectses());
                     searchMovieListAdapter.notifyDataSetChanged();
-                    listViewSearchMovie.setLoadState(GeneralListView.STATE_SUCCESS);
+                    listViewSearchMovie.setLoadState(GoodRecyclerView.STATE_SUCCESS);
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
-                    listViewSearchMovie.setLoadState(GeneralListView.STATE_FAIL);
+                    listViewSearchMovie.setLoadState(GoodRecyclerView.STATE_FAIL);
                 }
             });
         }
@@ -103,11 +103,11 @@ public class SearchMovieFragment extends Fragment {
     }
     private void initView(View view)
     {
-        listViewSearchMovie = (GeneralListView)view.findViewById(R.id.list_view_search_movie);
+        listViewSearchMovie = (GoodRecyclerView)view.findViewById(R.id.list_view_search_movie);
         listViewSearchMovie.setLayoutManager(new LinearLayoutManager(getContext()));
         searchMovieListAdapter = new SearchMovieListAdapter(getContext(),listpath);
         listViewSearchMovie.setAdapter(searchMovieListAdapter);
-        listViewSearchMovie.setOnLoadDataListener(new GeneralListView.OnLoadDataListener() {
+        listViewSearchMovie.setOnLoadDataListener(new GoodRecyclerView.OnLoadDataListener() {
             @Override
             public void onLoadData(int page) {
                 loadListData(page);

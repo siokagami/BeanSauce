@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.siokagami.android.goodrecyclerview.GoodRecyclerView;
 import com.siokagami.beansauce.R;
 import com.siokagami.beansauce.api.SearchApi;
 import com.siokagami.beansauce.model.Book;
@@ -18,7 +19,6 @@ import com.siokagami.beansauce.model.Books;
 import com.siokagami.beansauce.search.adapter.SearchBookListAdapter;
 import com.siokagami.beansauce.utils.DeviceUtil;
 import com.siokagami.beansauce.utils.LogUtil;
-import com.siokagami.beansauce.view.GeneralListView;
 
 import org.json.JSONObject;
 
@@ -35,7 +35,7 @@ public class SearchBookFragment extends Fragment {
     private Book bookList;
     List<Books> listpath = new ArrayList<Books>();
     private static String KEYWORDS = "bookKeywords";
-    private GeneralListView listViewSearchBook;
+    private GoodRecyclerView listViewSearchBook;
     private SearchBookListAdapter searchBookListAdapter;
 
 
@@ -72,7 +72,7 @@ public class SearchBookFragment extends Fragment {
         if(!DeviceUtil.isNetConnected(getContext()))
         {
             Toast.makeText(getContext(),"没有联网呢···",Toast.LENGTH_SHORT).show();
-            listViewSearchBook.setLoadState(GeneralListView.STATE_FAIL);
+            listViewSearchBook.setLoadState(GoodRecyclerView.STATE_FAIL);
         }
         else {
             SearchApi.getSearchBookList(getContext(), keyWords, start, new JsonHttpResponseHandler() {
@@ -84,18 +84,18 @@ public class SearchBookFragment extends Fragment {
                         listpath.clear();
                     }
                     if (bookList.getTotal() == 0) {
-                        listViewSearchBook.setLoadState(GeneralListView.STATE_EMPTY);
+                        listViewSearchBook.setLoadState(GoodRecyclerView.STATE_EMPTY);
                         return;
                     }
                     listpath.addAll(bookList.getBooks());
                     searchBookListAdapter.notifyDataSetChanged();
-                    listViewSearchBook.setLoadState(GeneralListView.STATE_SUCCESS);
+                    listViewSearchBook.setLoadState(GoodRecyclerView.STATE_SUCCESS);
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
-                    listViewSearchBook.setLoadState(GeneralListView.STATE_FAIL);
+                    listViewSearchBook.setLoadState(GoodRecyclerView.STATE_FAIL);
                 }
             });
         }
@@ -113,11 +113,11 @@ public class SearchBookFragment extends Fragment {
     }
     private void initView(View view)
     {
-        listViewSearchBook = (GeneralListView)view.findViewById(R.id.list_view_search_book);
+        listViewSearchBook = (GoodRecyclerView)view.findViewById(R.id.list_view_search_book);
         listViewSearchBook.setLayoutManager(new LinearLayoutManager(getContext()));
         searchBookListAdapter = new SearchBookListAdapter(getContext(),listpath);
         listViewSearchBook.setAdapter(searchBookListAdapter);
-        listViewSearchBook.setOnLoadDataListener(new GeneralListView.OnLoadDataListener() {
+        listViewSearchBook.setOnLoadDataListener(new GoodRecyclerView.OnLoadDataListener() {
             @Override
             public void onLoadData(int page) {
                 loadListData(page);

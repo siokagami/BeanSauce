@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.siokagami.beansauce.search.fragment.SearchBookFragment">
 
-    <com.siokagami.beansauce.view.GeneralListView
+    <com.siokagami.android.goodrecyclerview.GoodRecyclerView
         android:id="@+id/list_view_search_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

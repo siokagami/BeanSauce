@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.siokagami.android.goodrecyclerview.GoodRecyclerView;
 import com.siokagami.beansauce.R;
 import com.siokagami.beansauce.api.SearchApi;
 import com.siokagami.beansauce.model.Book;
@@ -18,7 +19,6 @@ import com.siokagami.beansauce.model.Music;
 import com.siokagami.beansauce.model.Musics;
 import com.siokagami.beansauce.search.adapter.SearchMusicListAdapter;
 import com.siokagami.beansauce.utils.DeviceUtil;
-import com.siokagami.beansauce.view.GeneralListView;
 
 import org.json.JSONObject;
 
@@ -36,7 +36,7 @@ public class SearchMusicFragment extends Fragment {
     private String keyWords ="いけないボーダーライン";
     private Music musicList;
     List<Musics> listpath = new ArrayList<Musics>();
-    private GeneralListView listViewSearchMusic;
+    private GoodRecyclerView listViewSearchMusic;
     private SearchMusicListAdapter searchMusicListAdapter;
 
     public SearchMusicFragment() {
@@ -74,7 +74,7 @@ public class SearchMusicFragment extends Fragment {
         if(!DeviceUtil.isNetConnected(getContext()))
         {
             Toast.makeText(getContext(), "没有联网呢···", Toast.LENGTH_SHORT).show();
-            listViewSearchMusic.setLoadState(GeneralListView.STATE_FAIL);
+            listViewSearchMusic.setLoadState(GoodRecyclerView.STATE_FAIL);
         }
         else {
             SearchApi.getSearchMusicList(getContext(), keyWords, start, new JsonHttpResponseHandler() {
@@ -86,18 +86,18 @@ public class SearchMusicFragment extends Fragment {
                         listpath.clear();
                     }
                     if (musicList.getTotal() == 0) {
-                        listViewSearchMusic.setLoadState(GeneralListView.STATE_EMPTY);
+                        listViewSearchMusic.setLoadState(GoodRecyclerView.STATE_EMPTY);
                         return;
                     }
                     listpath.addAll(musicList.getMusics());
                     searchMusicListAdapter.notifyDataSetChanged();
-                    listViewSearchMusic.setLoadState(GeneralListView.STATE_SUCCESS);
+                    listViewSearchMusic.setLoadState(GoodRecyclerView.STATE_SUCCESS);
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
-                    listViewSearchMusic.setLoadState(GeneralListView.STATE_FAIL);
+                    listViewSearchMusic.setLoadState(GoodRecyclerView.STATE_FAIL);
                 }
             });
         }
@@ -106,11 +106,11 @@ public class SearchMusicFragment extends Fragment {
     
     private void initView(View view)
     {
-        listViewSearchMusic = (GeneralListView)view.findViewById(R.id.list_view_search_music);
+        listViewSearchMusic = (GoodRecyclerView)view.findViewById(R.id.list_view_search_music);
         listViewSearchMusic.setLayoutManager(new LinearLayoutManager(getContext()));
         searchMusicListAdapter = new SearchMusicListAdapter(getContext(),listpath);
         listViewSearchMusic.setAdapter(searchMusicListAdapter);
-        listViewSearchMusic.setOnLoadDataListener(new GeneralListView.OnLoadDataListener() {
+        listViewSearchMusic.setOnLoadDataListener(new GoodRecyclerView.OnLoadDataListener() {
             @Override
             public void onLoadData(int page) {
                 loadListData(page);
