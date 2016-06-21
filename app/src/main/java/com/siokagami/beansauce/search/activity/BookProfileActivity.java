@@ -1,10 +1,8 @@
 package com.siokagami.beansauce.search.activity;
 
-import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,8 +19,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.siokagami.beansauce.R;
 import com.siokagami.beansauce.api.SearchApi;
 import com.siokagami.beansauce.base.BaseActivity;
-import com.siokagami.beansauce.model.Book;
-import com.siokagami.beansauce.model.Books;
+import com.siokagami.beansauce.bean.Books;
 import com.siokagami.beansauce.search.fragment.BookProfileFragment;
 import com.siokagami.beansauce.search.fragment.BookSummaryFragment;
 

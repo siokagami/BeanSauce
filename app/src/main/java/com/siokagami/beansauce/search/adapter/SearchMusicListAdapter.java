@@ -12,9 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.siokagami.beansauce.R;
-import com.siokagami.beansauce.model.Books;
-import com.siokagami.beansauce.model.Music;
-import com.siokagami.beansauce.model.Musics;
+import com.siokagami.beansauce.bean.Musics;
 import com.siokagami.beansauce.utils.UIUtil;
 
 import java.util.List;

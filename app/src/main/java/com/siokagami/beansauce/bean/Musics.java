@@ -1,6 +1,5 @@
-package com.siokagami.beansauce.model;
+package com.siokagami.beansauce.bean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

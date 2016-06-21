@@ -12,11 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.siokagami.beansauce.R;
-import com.siokagami.beansauce.model.Book;
-import com.siokagami.beansauce.model.Books;
+import com.siokagami.beansauce.bean.Books;
 import com.siokagami.beansauce.utils.UIUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

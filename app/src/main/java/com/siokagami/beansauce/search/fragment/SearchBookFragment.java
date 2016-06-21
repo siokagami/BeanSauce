@@ -14,11 +14,10 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.siokagami.android.goodrecyclerview.GoodRecyclerView;
 import com.siokagami.beansauce.R;
 import com.siokagami.beansauce.api.SearchApi;
-import com.siokagami.beansauce.model.Book;
-import com.siokagami.beansauce.model.Books;
+import com.siokagami.beansauce.bean.Book;
+import com.siokagami.beansauce.bean.Books;
 import com.siokagami.beansauce.search.adapter.SearchBookListAdapter;
 import com.siokagami.beansauce.utils.DeviceUtil;
-import com.siokagami.beansauce.utils.LogUtil;
 
 import org.json.JSONObject;
 

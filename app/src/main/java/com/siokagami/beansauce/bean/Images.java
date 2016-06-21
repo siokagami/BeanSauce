@@ -1,4 +1,4 @@
-package com.siokagami.beansauce.model;
+package com.siokagami.beansauce.bean;
 
 public class Images
 {

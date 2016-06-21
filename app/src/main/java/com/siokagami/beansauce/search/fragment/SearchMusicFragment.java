@@ -14,9 +14,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.siokagami.android.goodrecyclerview.GoodRecyclerView;
 import com.siokagami.beansauce.R;
 import com.siokagami.beansauce.api.SearchApi;
-import com.siokagami.beansauce.model.Book;
-import com.siokagami.beansauce.model.Music;
-import com.siokagami.beansauce.model.Musics;
+import com.siokagami.beansauce.bean.Music;
+import com.siokagami.beansauce.bean.Musics;
 import com.siokagami.beansauce.search.adapter.SearchMusicListAdapter;
 import com.siokagami.beansauce.utils.DeviceUtil;
 

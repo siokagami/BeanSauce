@@ -19,19 +19,15 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.siokagami.beansauce.R;
 import com.siokagami.beansauce.api.SearchApi;
 import com.siokagami.beansauce.base.BaseActivity;
-import com.siokagami.beansauce.model.Casts;
-import com.siokagami.beansauce.model.Musics;
-import com.siokagami.beansauce.model.Subjects;
+import com.siokagami.beansauce.bean.Casts;
+import com.siokagami.beansauce.bean.Subjects;
 import com.siokagami.beansauce.search.fragment.BookSummaryFragment;
 import com.siokagami.beansauce.search.fragment.MovieProfileFragment;
-import com.siokagami.beansauce.search.fragment.MusicProfileFragment;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.security.auth.Subject;
 
 import cz.msebera.android.httpclient.Header;
 
